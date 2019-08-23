@@ -1,0 +1,30 @@
+FROM alpine:latest
+
+RUN apk --update add --no-cache wget tar bash openjdk8-jre libc6-compat
+
+RUN echo "**** install Python ****" && \
+    apk add --no-cache python3 && \
+    if [ ! -e /usr/bin/python ]; then ln -sf python3 /usr/bin/python ; fi && \
+    \
+    echo "**** install pip ****" && \
+    python3 -m ensurepip && \
+    rm -r /usr/lib/python*/ensurepip && \
+    pip3 install --no-cache --upgrade pip setuptools wheel && \
+    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi
+
+
+RUN wget http://apache.mirror.anlx.net/spark/spark-2.4.3/spark-2.4.3-bin-hadoop2.7.tgz 
+RUN wget http://central.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar
+RUN wget http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.7.3/hadoop-aws-2.7.3.jar
+
+
+RUN tar -xzf spark-2.4.3-bin-hadoop2.7.tgz
+RUN mv spark-2.4.3-bin-hadoop2.7 /spark 
+RUN mv aws-java-sdk-1.7.4.jar /spark/jars
+RUN mv hadoop-aws-2.7.3.jar /spark/jars
+RUN rm spark-2.4.3-bin-hadoop2.7.tgz
+
+COPY start-master.sh /start-master.sh
+COPY start-worker.sh /start-worker.sh
+
+RUN mkdir '/opt/data'

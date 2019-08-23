@@ -1,0 +1,37 @@
+version: "3.3"
+services:
+  spark-master:
+    image: aiyer/spark:latest
+    container_name: spark-master
+    hostname: spark-master
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    networks:
+      - spark-network
+    environment:
+      - "SPARK_LOCAL_IP=spark-master"
+      - "SPARK_MASTER_PORT=7077"
+      - "SPARK_MASTER_WEBUI_PORT=8080"
+    command: "/start-master.sh"
+    volumes:
+      - /Users/akshayiyer/Dev/GitHub/udacity-dend/udacity-dend-coursework/datalake-project/data:/opt/data
+  spark-worker:
+    image: aiyer/spark:latest
+    depends_on:
+      - spark-master
+    ports:
+      - 8080
+    networks:
+      - spark-network
+    environment:
+      - "SPARK_MASTER=spark://spark-master:7077"
+      - "SPARK_WORKER_WEBUI_PORT=8080"
+      - "SPARK_WORKER_CORES=4"
+      - "SPARK_WORKER_MEMORY=1G"
+    command: "/start-worker.sh"
+networks:
+  spark-network:
+    driver: bridge
+    ipam:
+      driver: default
