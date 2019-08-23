@@ -5,7 +5,7 @@
     - Dockerfile
     - start-master.sh
     - start-worker.sh
-- Use docker-compose to spin up a Spark cluster. docker-compose.yml provides the specifications for master/worker nodes.
+- Use docker-compose to spin up a Spark cluster. `docker-compose.yml` provides the specifications for master/worker nodes.
     - `docker-compose up --scale spark-worker=4`
 - All docker containers are within a user-defined network called `spark-network`
     - `docker network create spark-network`
