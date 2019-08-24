@@ -5,7 +5,7 @@ secret.py
 data/
 datalake-project/
 .vscode/
-.DS_Store
+*.DS_Store
 udacity-dend-capstone-etl/.DS_Store
 
 # Byte-compiled / optimized / DLL files
@@ -123,3 +123,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 *.pem
+udacity-dend-capstone-etl.code-workspace
