@@ -4,6 +4,7 @@ Contains all utility functions
 import urllib.request
 import os
 import configparser
+import zipfile
 import boto3
 
 
@@ -30,7 +31,7 @@ def upload_files_to_s3(
         bucket_name,
         files_list,
         local_directory,
-        ):
+):
     '''
     Upload files from a local directory to an S3 bucket
     Params:
@@ -73,3 +74,14 @@ def empty_local_directory(local_directory):
     for file in os.listdir(local_directory):
         if os.path.isfile(os.path.join(local_directory, file)):
             os.unlink(os.path.join(local_directory, file))
+
+
+def unzip_single_file(source, dest):
+    '''
+    Unzip a single zipped file to a destination directory
+    Params:
+        source - File path + name of source zip file
+        dest - Destination directory for unzipped files
+    '''
+    with zipfile.ZipFile(source, 'r') as zip_obj:
+        zip_obj.extractall(dest)
