@@ -15,7 +15,7 @@ services:
       - "SPARK_MASTER_WEBUI_PORT=8080"
     command: "/start-master.sh"
     volumes:
-      - /Users/akshayiyer/Dev/GitHub/udacity-dend/udacity-dend-coursework/datalake-project/data:/opt/data
+      - ~/Dev/GitHub/udacity-dend-capstone-etl/data:/opt/data
   spark-worker:
     image: aiyer/spark:latest
     depends_on:
