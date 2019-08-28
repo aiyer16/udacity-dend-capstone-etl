@@ -15,7 +15,7 @@ services:
       - "SPARK_MASTER_WEBUI_PORT=8080"
     command: "/start-master.sh"
     volumes:
-      - ~/Dev/GitHub/udacity-dend-capstone-etl/data:/opt/data
+      - /Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data:/Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data
   spark-worker:
     image: aiyer/spark:latest
     depends_on:
@@ -30,6 +30,8 @@ services:
       - "SPARK_WORKER_CORES=4"
       - "SPARK_WORKER_MEMORY=1G"
     command: "/start-worker.sh"
+    volumes:
+      - /Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data:/Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data
 networks:
   spark-network:
     driver: bridge

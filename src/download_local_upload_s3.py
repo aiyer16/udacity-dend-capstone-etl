@@ -27,14 +27,7 @@ def main():
     # Main Section
     util.download_files_to_local(base_url, files_list, temp_filepath)
 
-    util.upload_files_to_s3(
-        "us-east-2",
-        "aiyer-udacity-dend",
-        files_list,
-        temp_filepath
-        )
-
-    util.empty_local_directory(temp_filepath)
+    # util.empty_local_directory(temp_filepath)
 
 
 if __name__ == "__main__":
