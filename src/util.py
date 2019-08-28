@@ -6,6 +6,7 @@ import os
 import configparser
 import zipfile
 import boto3
+from pyspark.sql import SparkSession
 
 
 def download_files_to_local(base_url, files_list, local_directory):
@@ -85,3 +86,22 @@ def unzip_single_file(source, dest):
     '''
     with zipfile.ZipFile(source, 'r') as zip_obj:
         zip_obj.extractall(dest)
+
+
+def create_spark_session(master, endpoint=None):
+    '''
+    Create Spark Session
+    Params
+        - master : Master spark node host IP
+        - endpoint : AWS Region Endpoint
+    '''
+    spark = SparkSession \
+        .builder \
+        .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.7.0") \
+        .config("fs.s3a.endpoint", endpoint) \
+        .config("spark.sql.autoBroadcastJoinThreshold", -1) \
+        .appName("udacity-dend-capstone-etl-proj") \
+        .master(master) \
+        .getOrCreate()
+
+    return spark
