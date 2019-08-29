@@ -11,6 +11,8 @@ import util
 def fix_year(col):
     '''
     Fix the year column by getting rid of bad values
+    Params
+        - col: column name
     '''
     # Get today's date
     now = datetime.datetime.now()
@@ -22,9 +24,11 @@ def fix_year(col):
     return fix_year_func
 
 
-def process_name_basics(spark):
+def process_artist_data(spark):
     '''
-    Process name.basics.tsv.gz
+    Process files related to artist data
+    Params
+        - spark: Active spark session object
     '''
     temp_filepath = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/tmp'
     file = 'name.basics.tsv.gz'
@@ -77,6 +81,48 @@ def process_name_basics(spark):
         save_file_path + "artists_knwnfor_titles.parquet")
 
 
+def process_title_data(spark):
+    '''
+    Process files related to titles data
+    Params
+        - spark: Active spark session object
+    '''
+    temp_filepath = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/tmp'
+    file = 'title.basics.tsv.gz'
+
+    title_basics_df_raw = spark.read.load(
+        temp_filepath + '/' + file,
+        format="csv",
+        sep="\t",
+        inferSchema="true",
+        header="true",
+        ignoreLeadingWhiteSpace=True,
+        ignoreTrailingWhiteSpace=True,
+        nullValue='\\N',
+        # this will ignore using quotes as a qualifier. This helps reduce malformed records.
+        quote=''
+    )
+
+    # Generate titles dataframes
+    title_basics_df = title_basics_df_raw.withColumnRenamed(
+        "tconst", "titleId")
+
+    titles_df = title_basics_df.select("titleId", "titleType", "primaryTitle", "originalTitle",
+                                       "isAdult", "startYear", "endYear", "runtimeMinutes")
+
+    titles_genres_df = title_basics_df.select(
+        "titleId", F.explode(F.split(F.col("genres"), ",")).alias("genres"))
+
+    # Save processed dataframes to parquet
+    save_file_path = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/'
+
+    titles_df.write.mode('overwrite').partitionBy(
+        "startYear").parquet(save_file_path + "titles.parquet")
+
+    titles_genres_df.write.mode('overwrite').parquet(
+        save_file_path + "titles_genres.parquet")
+
+
 def main():
     '''
     Main routine
@@ -88,7 +134,9 @@ def main():
     spark = util.create_spark_session(
         "spark://127.0.0.1:7077", "s3.us-west-2.amazonaws.com")
 
-    process_name_basics(spark)
+    process_artist_data(spark)
+
+    process_title_data(spark)
 
 
 if __name__ == "__main__":
