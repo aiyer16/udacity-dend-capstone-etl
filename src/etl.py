@@ -161,7 +161,9 @@ def main():
         "/Users/akshayiyer/Library/Java/JavaVirtualMachines/jdk8u222-b10/Contents/Home"
 
     spark = util.create_spark_session(
-        "spark://127.0.0.1:7077", "s3.us-west-2.amazonaws.com")
+        master="spark://127.0.0.1:7077",
+        app_name="udacity-dend-capstone-etl-proj",
+        endpoint="s3.us-west-2.amazonaws.com")
 
     save_file_path = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/'
     temp_filepath = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/tmp'

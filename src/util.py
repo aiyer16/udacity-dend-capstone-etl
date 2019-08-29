@@ -88,7 +88,7 @@ def unzip_single_file(source, dest):
         zip_obj.extractall(dest)
 
 
-def create_spark_session(master, endpoint=None):
+def create_spark_session(master, app_name, endpoint=None):
     '''
     Create Spark Session
     Params
@@ -100,7 +100,7 @@ def create_spark_session(master, endpoint=None):
         .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.7.0") \
         .config("fs.s3a.endpoint", endpoint) \
         .config("spark.sql.autoBroadcastJoinThreshold", -1) \
-        .appName("udacity-dend-capstone-etl-proj") \
+        .appName(app_name) \
         .master(master) \
         .getOrCreate()
 
