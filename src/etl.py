@@ -24,17 +24,18 @@ def fix_year(col):
     return fix_year_func
 
 
-def process_artist_data(spark):
+def process_artist_data(spark, source, dest):
     '''
     Process files related to artist data
     Params
         - spark: Active spark session object
+        - source: Source directory/path for file
+        - dest: Destination directory/path for file
     '''
-    temp_filepath = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/tmp'
     file = 'name.basics.tsv.gz'
 
     names_df_raw = spark.read.load(
-        temp_filepath + '/' + file,
+        source + '/' + file,
         format="csv",
         sep="\t",
         inferSchema="true",
@@ -69,29 +70,28 @@ def process_artist_data(spark):
                                               .alias("knownForTitles"))
 
     # Write artist dataframes to parquet
-    save_file_path = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/'
-
     artists_df.write.mode('overwrite').parquet(
-        save_file_path + "artists.parquet")
+        dest + "artists.parquet")
 
     artists_prmry_prfsn_df.write.mode('overwrite').parquet(
-        save_file_path + "artists_prmry_profession.parquet")
+        dest + "artists_prmry_profession.parquet")
 
     artists_knwn_fr_ttls_df.write.mode('overwrite').parquet(
-        save_file_path + "artists_knwnfor_titles.parquet")
+        dest + "artists_knwnfor_titles.parquet")
 
 
-def process_title_data(spark):
+def process_title_data(spark, source, dest):
     '''
     Process files related to titles data
     Params
         - spark: Active spark session object
+        - source: Source directory/path for file
+        - dest: Destination directory/path for file
     '''
-    temp_filepath = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/tmp'
     file = 'title.basics.tsv.gz'
 
     title_basics_df_raw = spark.read.load(
-        temp_filepath + '/' + file,
+        source + '/' + file,
         format="csv",
         sep="\t",
         inferSchema="true",
@@ -114,13 +114,42 @@ def process_title_data(spark):
         "titleId", F.explode(F.split(F.col("genres"), ",")).alias("genres"))
 
     # Save processed dataframes to parquet
-    save_file_path = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/'
-
     titles_df.write.mode('overwrite').partitionBy(
-        "startYear").parquet(save_file_path + "titles.parquet")
+        "startYear").parquet(dest + "titles.parquet")
 
     titles_genres_df.write.mode('overwrite').parquet(
-        save_file_path + "titles_genres.parquet")
+        dest + "titles_genres.parquet")
+
+
+def process_ratings_data(spark, source, dest):
+    '''
+    Process files related to ratings data
+    Params
+        - spark: Active spark session object
+        - source: Source directory/path for file
+        - dest: Destination directory/path for file
+    '''
+    file = 'title.ratings.tsv.gz'
+
+    title_ratings_df_raw = spark.read.load(
+        source + '/' + file,
+        format="csv",
+        sep="\t",
+        inferSchema="true",
+        header="true",
+        ignoreLeadingWhiteSpace=True,
+        ignoreTrailingWhiteSpace=True,
+        nullValue='\\N',
+        # this will ignore using quotes as a qualifier. This helps reduce malformed records.
+        quote=''
+    )
+
+    title_ratings_df = title_ratings_df_raw.withColumnRenamed(
+        "tconst", "titleId")
+
+    # Save processed dataframes to parquet
+    title_ratings_df.write.mode('overwrite').parquet(
+        dest + "title_ratings.parquet")
 
 
 def main():
@@ -134,9 +163,13 @@ def main():
     spark = util.create_spark_session(
         "spark://127.0.0.1:7077", "s3.us-west-2.amazonaws.com")
 
-    process_artist_data(spark)
+    save_file_path = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/'
+    temp_filepath = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/tmp'
 
-    process_title_data(spark)
+    # Process all dimension files
+    process_artist_data(spark, temp_filepath, save_file_path)
+    process_title_data(spark, temp_filepath, save_file_path)
+    process_ratings_data(spark, temp_filepath, save_file_path)
 
 
 if __name__ == "__main__":
