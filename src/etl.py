@@ -172,7 +172,8 @@ def main():
     Main routine
     '''
     # Set environment variables
-    os.environ["JAVA_HOME"] = "/Users/akshayiyer/Library/Java/JavaVirtualMachines/jdk8u222-b10/Contents/Home"
+    os.environ["JAVA_HOME"] = \
+        "/Users/akshayiyer/Library/Java/JavaVirtualMachines/jdk8u222-b10/Contents/Home"
 
     spark = util.create_spark_session(
         master="spark://127.0.0.1:7077",
