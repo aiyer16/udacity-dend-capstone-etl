@@ -47,11 +47,14 @@ def process_artist_data(spark, source, dest):
 
     names_df = names_df_raw.withColumnRenamed("nconst", "artistId")
 
+    # For very small number of cases, the birthYear and deathYear is less than 1000
+    # (15 and 18 respectively)
+    # Spot checking a few entries, this mostly seems to be an error in the dataset
+    # Rather than removing these entries, marking these fields as null seems appropriate
     names_df = names_df.withColumn("birthYear_fixed", fix_year('birthYear')) \
         .drop("birthYear") \
-        .withColumnRenamed("birthYear_fixed", "birthYear")
-
-    names_df = names_df.withColumn("deathYear_fixed", fix_year('deathYear')) \
+        .withColumnRenamed("birthYear_fixed", "birthYear") \
+        .withColumn("deathYear_fixed", fix_year('deathYear')) \
         .drop("deathYear") \
         .withColumnRenamed("deathYear_fixed", "deathYear")
 
