@@ -51,6 +51,18 @@ def process_artist_data(spark, source, dest):
     # (15 and 18 respectively)
     # Spot checking a few entries, this mostly seems to be an error in the dataset
     # Rather than removing these entries, marking these fields as null seems appropriate
+    bad_records_birthyear = names_df.filter(names_df.birthYear < 1000).count()
+    bad_records_deathyear = names_df.filter(names_df.deathYear < 1000).count()
+    bad_records_threshold = 20
+
+    if bad_records_birthyear > bad_records_threshold \
+            or bad_records_deathyear > bad_records_threshold:
+        error_message = (
+            f"Bad records for birthYear and / or deathYear columns \
+            in names file exceed threshold of {bad_records_threshold}")
+
+        raise AssertionError(error_message)
+
     names_df = names_df.withColumn("birthYear_fixed", fix_year('birthYear')) \
         .drop("birthYear") \
         .withColumnRenamed("birthYear_fixed", "birthYear") \
@@ -160,8 +172,7 @@ def main():
     Main routine
     '''
     # Set environment variables
-    os.environ["JAVA_HOME"] = \
-        "/Users/akshayiyer/Library/Java/JavaVirtualMachines/jdk8u222-b10/Contents/Home"
+    os.environ["JAVA_HOME"] = "/Users/akshayiyer/Library/Java/JavaVirtualMachines/jdk8u222-b10/Contents/Home"
 
     spark = util.create_spark_session(
         master="spark://127.0.0.1:7077",
