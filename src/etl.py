@@ -35,7 +35,7 @@ def process_artist_data(spark, source, dest):
     file = 'name.basics.tsv.gz'
 
     names_df_raw = spark.read.load(
-        source + '/' + file,
+        source + file,
         format="csv",
         sep="\t",
         inferSchema="true",
@@ -84,15 +84,15 @@ def process_artist_data(spark, source, dest):
                                                   F.split(F.col("knownForTitles"), ","))
                                               .alias("knownForTitles"))
 
-    # Write artist dataframes to parquet
-    artists_df.write.mode('overwrite').parquet(
-        dest + "artists.parquet")
+    # Write artist dataframes to delta tables
+    artists_df.write.format('delta').mode('overwrite').save(
+        dest + "artists")
 
-    artists_prmry_prfsn_df.write.mode('overwrite').parquet(
-        dest + "artists_prmry_profession.parquet")
+    artists_prmry_prfsn_df.write.format("delta").mode('overwrite').save(
+        dest + "artists_prmry_profession")
 
-    artists_knwn_fr_ttls_df.write.mode('overwrite').parquet(
-        dest + "artists_knwnfor_titles.parquet")
+    artists_knwn_fr_ttls_df.write.format("delta").mode('overwrite').save(
+        dest + "artists_knwnfor_titles")
 
 
 def process_title_data(spark, source, dest):
@@ -106,7 +106,7 @@ def process_title_data(spark, source, dest):
     file = 'title.basics.tsv.gz'
 
     title_basics_df_raw = spark.read.load(
-        source + '/' + file,
+        source + file,
         format="csv",
         sep="\t",
         inferSchema="true",
@@ -129,11 +129,11 @@ def process_title_data(spark, source, dest):
         "titleId", F.explode(F.split(F.col("genres"), ",")).alias("genres"))
 
     # Save processed dataframes to parquet
-    titles_df.write.mode('overwrite').partitionBy(
-        "startYear").parquet(dest + "titles.parquet")
+    titles_df.write.format("delta").mode('overwrite').partitionBy(
+        "startYear").save(dest + "titles")
 
-    titles_genres_df.write.mode('overwrite').parquet(
-        dest + "titles_genres.parquet")
+    titles_genres_df.write.format("delta").mode('overwrite').save(
+        dest + "titles_genres")
 
 
 def process_ratings_data(spark, source, dest):
@@ -147,7 +147,7 @@ def process_ratings_data(spark, source, dest):
     file = 'title.ratings.tsv.gz'
 
     title_ratings_df_raw = spark.read.load(
-        source + '/' + file,
+        source + file,
         format="csv",
         sep="\t",
         inferSchema="true",
@@ -163,8 +163,8 @@ def process_ratings_data(spark, source, dest):
         "tconst", "titleId")
 
     # Save processed dataframes to parquet
-    title_ratings_df.write.mode('overwrite').parquet(
-        dest + "title_ratings.parquet")
+    title_ratings_df.write.format("delta").mode('overwrite').save(
+        dest + "title_ratings")
 
 
 def main():
@@ -180,8 +180,8 @@ def main():
         app_name="udacity-dend-capstone-etl-proj",
         endpoint="s3.us-west-2.amazonaws.com")
 
-    save_file_path = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/'
-    temp_filepath = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/tmp'
+    save_file_path = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/delta/'
+    temp_filepath = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/tmp/'
 
     # Process all dimension files
     process_artist_data(spark, temp_filepath, save_file_path)

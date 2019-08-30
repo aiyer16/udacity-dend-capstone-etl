@@ -1,11 +1,11 @@
 # Running the ETL Job
-The goal of the ETL job is to download a few datasets from IMDb, clean and manipulate them to create individual dimension and fact tables as parquet files. The steps to run the ETL job locally are as follows - 
+The goal of the ETL job is to download a few datasets from IMDb, clean and manipulate them to create individual dimension and fact tables as Delta Lake tables (parquet files). The steps to run the ETL job locally are as follows - 
 
 - Spin up the Spark cluster in Docker using docker-compose command. For full instructions on creating Docker image and setting up Spark, see [Spark 2.4.3 Cluster Using Docker](#Spark-2.4.3-Cluster-Using-Docker)
      - `cd ./Spark`
      - `docker-compose up --scale spark-worker=4` sets up a cluster with 4 workers and 1 master.
 - Run `./src/download_files.py` to download zip files from IMDb to `./data/tmp`.
-- Run `./src/etl.py` to process the IMDb files and generated dimesion and fact tables as parquet files to `./data/`. The following parquet files are created - 
+- Run `./src/etl.py` to process the IMDb files and generated dimesion and fact tables as Delta Lake parquet files to `./data/delta/`. For more information on Delta Lake, see https://docs.delta.io/latest/delta-intro.html. The following delta tables are created - 
     - artists
     - artists_knwnfor_titles
     - artists_prmry_profession
@@ -14,8 +14,6 @@ The goal of the ETL job is to download a few datasets from IMDb, clean and manip
     - titles_ratings
     - titles_genres_ratings
     
-
-
 # Source Datasets
 The source datasets for this project come from IMDb (https://www.imdb.com/interfaces/). The dataset files can be accessed and downloaded from https://datasets.imdbws.com/. The data is refreshed daily.
 

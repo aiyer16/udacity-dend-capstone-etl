@@ -97,7 +97,8 @@ def create_spark_session(master, app_name, endpoint=None):
     '''
     spark = SparkSession \
         .builder \
-        .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.7.0") \
+        .config("spark.jars.packages",
+                "org.apache.hadoop:hadoop-aws:2.7.0,io.delta:delta-core_2.11:0.3.0") \
         .config("fs.s3a.endpoint", endpoint) \
         .config("spark.sql.autoBroadcastJoinThreshold", -1) \
         .appName(app_name) \
