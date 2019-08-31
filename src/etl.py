@@ -85,7 +85,7 @@ def process_artist_data(spark, source, dest):
                                               .alias("knownForTitles"))
 
     # Write artist dataframes to delta tables
-    artists_df.write.format('delta').mode('overwrite').save(
+    artists_df.write.format('delta').partitionBy("birthYear").mode('overwrite').save(
         dest + "artists")
 
     artists_prmry_prfsn_df.write.format("delta").mode('overwrite').save(
