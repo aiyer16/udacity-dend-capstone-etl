@@ -1,7 +1,10 @@
+# Overview
+This repository contains code for the capstone ETL project as part of the Udacity Data Engineering Nanodegree program. For more details about the program, please see https://www.udacity.com/course/data-engineer-nanodegree--nd027. 
+
 # Running the ETL Job
 The goal of the ETL job is to download a few datasets from IMDb, clean and manipulate them to create individual dimension and fact tables as Delta Lake tables (parquet files). The steps to run the ETL job locally are as follows - 
 
-- Spin up the Spark cluster in Docker using docker-compose command. For full instructions on creating Docker image and setting up Spark, see [Spark 2.4.3 Cluster Using Docker](#Spark-2.4.3-Cluster-Using-Docker)
+- Spin up the Spark cluster in Docker using docker-compose command. For full instructions on creating Docker image and setting up Spark, see [Spark 2.4.3 Cluster Using Docker](#Spark-243-Cluster-Using-Docker)
      - `cd ./Spark`
      - `docker-compose up --scale spark-worker=4` sets up a cluster with 4 workers and 1 master.
 - Run `./src/download_files.py` to download zip files from IMDb to `./data/tmp`.
