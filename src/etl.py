@@ -180,13 +180,17 @@ def main():
         app_name="udacity-dend-capstone-etl-proj",
         endpoint="s3.us-west-2.amazonaws.com")
 
-    save_file_path = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/delta/'
-    temp_filepath = 'file:///Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/data/tmp/'
+    base_path = os.path.join(os.path.abspath(''), os.pardir)
+
+    save_filepath = 'file://' + \
+        os.path.abspath(os.path.join(base_path, 'data', 'delta'))
+    temp_filepath = 'file://' + \
+        os.path.abspath(os.path.join(base_path, 'data', 'tmp'))
 
     # Process all dimension files
-    process_artist_data(spark, temp_filepath, save_file_path)
-    process_title_data(spark, temp_filepath, save_file_path)
-    process_ratings_data(spark, temp_filepath, save_file_path)
+    process_artist_data(spark, temp_filepath, save_filepath)
+    process_title_data(spark, temp_filepath, save_filepath)
+    process_ratings_data(spark, temp_filepath, save_filepath)
 
 
 if __name__ == "__main__":
