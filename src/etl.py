@@ -182,6 +182,15 @@ def process_top_movies(spark, source, dest):
     title_df = spark.read.format("delta").load(titles_source)
     title_ratings_df = spark.read.format("delta").load(title_ratings_source)
 
+    # Validate that title and title_ratings datasets join completely
+    count_source = title_ratings_df.select("titleId").distinct().count()
+    count_dest = title_ratings_df.join(title_df, "titleId").distinct().count()
+
+    if count_source != count_dest:
+        error_message = (
+            "Title and Title Ratings datasets don't join completely!")
+        raise AssertionError(error_message)
+
     # Create SQL views from dataframes
     title_df.createOrReplaceTempView("titles")
     title_ratings_df.createOrReplaceTempView("title_ratings")
@@ -242,6 +251,7 @@ def main():
     process_title_data(spark, temp_filepath, save_filepath)
     process_ratings_data(spark, temp_filepath, save_filepath)
     process_top_movies(spark, save_filepath, save_filepath)
+
 
 if __name__ == "__main__":
     main()
