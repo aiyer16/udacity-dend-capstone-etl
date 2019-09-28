@@ -241,7 +241,7 @@ def main():
         app_name="udacity-dend-capstone-etl-proj",
         endpoint="s3.us-west-2.amazonaws.com")
 
-    base_path = os.path.join(os.path.abspath(''), os.pardir)
+    base_path = os.path.join(os.path.abspath('__file__'), os.pardir)
 
     save_filepath = os.path.abspath(os.path.join(base_path, 'data', 'delta'))
     temp_filepath = os.path.abspath(os.path.join(base_path, 'data', 'tmp'))

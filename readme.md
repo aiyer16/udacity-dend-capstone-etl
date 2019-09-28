@@ -28,6 +28,8 @@ Contains the IMDb rating and votes information for titles
 - averageRating – weighted average of all the individual user ratings
 - numVotes - number of votes the title has received
 
+Number of Records: 
+
 ### name.basics.tsv.gz
 Contains the following information for names:
 - nconst (string) - alphanumeric unique identifier of the name/person
