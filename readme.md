@@ -67,25 +67,6 @@ This would require the implementation of a scheduler such as Apache Airflow that
 ## If the database needed to be accessed by 100+ people.
 This problem can be handled by switching from storing the processed data as files to database tables in a cloud data warehouse such as Amazon Redshift, which has the capability to scale automatically based on user demand. 
 
-# Running the ETL Job
-The goal of the ETL job is to download a few datasets from IMDb, clean and manipulate them to create individual dimension and fact tables as Delta Lake tables (parquet files). The steps to run the ETL job locally are as follows - 
-
-- Spin up the Spark cluster in Docker using docker-compose command. For full instructions on creating Docker image and setting up Spark, see [Spark 2.4.3 Cluster Using Docker](#Spark-243-Cluster-Using-Docker)
-     - `cd ./Spark`
-     - `docker-compose up --scale spark-worker=4` sets up a cluster with 4 workers and 1 master.
-- Run `./bin/python ./src/download_files.py` to download zip files from IMDb to `./data/tmp`.
-- Run `./bin/python ./src/etl.py` to process the IMDb files and generated dimesion and fact tables as Delta Lake parquet files to `./data/delta/`. For more information on Delta Lake, see https://docs.delta.io/latest/delta-intro.html. The following delta tables are created - 
-    - artists
-    - artists_knwnfor_titles
-    - artists_prmry_profession
-    - titles
-    - titles_genres
-    - titles_ratings
-    - titles_genres_ratings
-- Decomission Spark cluster using the docker-compose down command. 
-    - `cd ./Spark`
-    - `docker-compose down`
-
 # Data Dictionary
 Each dataset is contained in a gzipped, tab-separated-values (TSV) formatted file in the UTF-8 character set. The first line in each file contains headers that describe what is in each column. A ‘\N’ is used to denote that a particular field is missing or null for that title/name. The datasets used in this project are as follows:
 
@@ -122,6 +103,7 @@ Contains the following information for titles:
 
 **Number of Records: 6.2MM (as of 2019-09-29)**
 
+---
 # Spark 2.4.3 Cluster Using Docker
 - Relevant files to spin up stand-alone Spark cluster using Docker are in `./Spark/`
     - docker-compose.yml
@@ -141,10 +123,29 @@ Contains the following information for titles:
     - Python version on driver and cluster (master + workers) must match; Python 3.7.x in this case.
     - Connecting to AWS needs the JAR files [aws-java-sdk-1.7.4.jar](http://central.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.4/) and [hadoop-aws-2.7.3.jar](http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.7.3/hadoop-aws-2.7.3.jar). This is copied to the `spark/jars` folder on the cluster machines
 
+---
+# Running the ETL Job
+The goal of the ETL job is to download a few datasets from IMDb, clean and manipulate them to create individual dimension and fact tables as Delta Lake tables (parquet files). The steps to run the ETL job locally are as follows - 
+
+- Spin up the Spark cluster in Docker using docker-compose command. For full instructions on creating Docker image and setting up Spark, see [Spark 2.4.3 Cluster Using Docker](#Spark-243-Cluster-Using-Docker)
+     - `cd ./Spark`
+     - `docker-compose up --scale spark-worker=4` sets up a cluster with 4 workers and 1 master.
+- Run `./bin/python ./src/download_files.py` to download zip files from IMDb to `./data/tmp`.
+- Run `./bin/python ./src/etl.py` to process the IMDb files and generated dimesion and fact tables as Delta Lake parquet files to `./data/delta/`. For more information on Delta Lake, see https://docs.delta.io/latest/delta-intro.html. The following delta tables are created - 
+    - artists
+    - artists_knwnfor_titles
+    - artists_prmry_profession
+    - titles
+    - titles_genres
+    - titles_ratings
+    - titles_genres_ratings
+- Decomission Spark cluster using the docker-compose down command. 
+    - `cd ./Spark`
+    - `docker-compose down`
+    
+--- 
 # Resources
 - [A guide for setting up Apache Spark using Docker](https://towardsdatascience.com/a-journey-into-big-data-with-apache-spark-part-1-5dfcc2bccdd2)
 - [Excellent 2 hour tutorial on Docker](https://youtu.be/fqMOX6JJhGo)
 - [To configure spark to connect to AWS/S3](https://markobigdata.com/category/spark-configuration/ )
 - [Useful commands to clean up unused Docker resources and reclaim space](https://linuxize.com/post/how-to-remove-docker-images-containers-volumes-and-networks/)
-
----
