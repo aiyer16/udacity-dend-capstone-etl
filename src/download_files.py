@@ -22,7 +22,7 @@ def main():
         "title.ratings.tsv.gz"]
 
     temp_filepath = os.path.abspath(
-        os.path.join(os.path.abspath('__file__'), os.pardir, 'data', 'tmp'))
+        os.path.join(os.path.abspath('__file__'), "../..", 'data', 'tmp'))
 
     util.empty_local_directory(temp_filepath)
 
