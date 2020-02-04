@@ -164,7 +164,8 @@ The goal of the ETL job is to download a few datasets from IMDb, clean and manip
 - All docker containers are within a user-defined network called `spark-network`
   - `docker network create spark-network` can be used to create the network but this isn't necessary since it will be created automatically when you run docker compose.
   - Note that networks created automatically from the docker compose file follow the `image_network-name` naming convention. So if you use docker-compose to create the network, the network will be named `spark_spark-network` but that shouldn't matter since all we want is for all containers to be in the same network.
-- Spark Jobs are submitted to the cluster using personal Mac as driver.
+- Spark Jobs are submitted to the cluster using personal Mac as driver. Make sure that pyspark version matches the spark installation on containers, i.e. Spark 2.4.3
+  - To install specific version of pyspark use `pip install pyspark==2.4.3`
   - OpenJDK 8 has been installed on driver machine (Mac) to support this. See https://adoptopenjdk.net/installation.html#x64_mac-jdk for installation instructions. This matches the JDK version on the Spark cluster (Spark only works on JDK8 as of 20-Aug-2019)
   - Python version on driver and cluster (master + workers) must match; Python 3.7.x in this case.
   - Connecting to AWS needs the JAR files [aws-java-sdk-1.7.4.jar](http://central.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.4/) and [hadoop-aws-2.7.3.jar](http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.7.3/hadoop-aws-2.7.3.jar). This is copied to the `spark/jars` folder on the cluster machines

@@ -160,7 +160,7 @@ do
    if ! which minikube 1>/dev/null; then
      error "Cannot find minikube."
    fi
-   eval $(minikube docker-env --shell bash)
+   eval $(minikube docker-env)
    ;;
  esac
 done
