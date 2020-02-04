@@ -1,4 +1,4 @@
-#!/Users/akshayiyer/Dev/GitHub/udacity-dend/udacity-dend-capstone-etl/bin/python3.7
+#!/Users/akshayiyer/Dev/GitHub/udacity-dend-capstone-etl/bin/python3.7
 # -*- coding: utf-8 -*-
 import re
 import sys
