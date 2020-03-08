@@ -178,4 +178,4 @@ The goal of the ETL job is to download a few datasets from IMDb, clean and manip
 - [Excellent 2 hour tutorial on Docker](https://youtu.be/fqMOX6JJhGo)
 - [To configure spark to connect to AWS/S3](https://markobigdata.com/category/spark-configuration/)
 - [Useful commands to clean up unused Docker resources and reclaim space](https://linuxize.com/post/how-to-remove-docker-images-containers-volumes-and-networks/)
-- [Installing Spark Progress Bar in Jupyter](https://github.com/mozilla/jupyter-spark)
+- [Installing Spark Progress Bar in Jupyter](https://github.com/krishnan-r/sparkmonitor)
