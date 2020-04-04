@@ -5,7 +5,7 @@
 [Data Dictionary](Data-Dictionary)\
 [Running the ETL Job](Running-the-ETL-Job)\
 [Spark 2.4.3 Cluster Using Docker](Spark-243-Cluster-Using-Docker)\
-[Resources](Resources)
+[Resources](Resources)\
 [Copyright](Copyright)
 
 # Objective
