@@ -6,6 +6,7 @@
 [Running the ETL Job](Running-the-ETL-Job)\
 [Spark 2.4.3 Cluster Using Docker](Spark-243-Cluster-Using-Docker)\
 [Resources](Resources)
+[Copyright](Copyright)
 
 # Objective
 
@@ -179,3 +180,12 @@ The goal of the ETL job is to download a few datasets from IMDb, clean and manip
 - [To configure spark to connect to AWS/S3](https://markobigdata.com/category/spark-configuration/)
 - [Useful commands to clean up unused Docker resources and reclaim space](https://linuxize.com/post/how-to-remove-docker-images-containers-volumes-and-networks/)
 - [Installing Spark Progress Bar in Jupyter](https://github.com/krishnan-r/sparkmonitor)
+
+# Copyright
+This project was submitted by Akshay Iyer as part of the Data Engineering Nanodegree At Udacity.
+
+As part of Udacity Honor code, your submissions must be your own work, hence submitting this project as yours will cause you to break the Udacity Honor Code and the suspension of your account.
+
+Me, the author of the project, allow you to check the code as a reference, but if you submit it, it's your own responsibility if you get expelled.
+
+Copyright (c) 2019 Akshay Iyer
