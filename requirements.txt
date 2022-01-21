@@ -8,7 +8,7 @@ decorator==4.4.0
 delta==0.4.2
 docutils==0.14
 ipykernel==5.1.2
-ipython==7.7.0
+ipython==7.16.3
 ipython-genutils==0.2.0
 isort==4.3.20
 jedi==0.15.1
